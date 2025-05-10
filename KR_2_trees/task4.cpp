@@ -2,12 +2,14 @@
 
 using namespace std;
 
+enum Color {RED, BLACK};
+
 struct Node {
 	int key;
 	Node* left, * right, * parent;
-	char color;
+	Color color;
 
-	Node(int val) : key(val), left(nullptr), right(nullptr), parent(nullptr), color('b') {}
+	Node(int val) : key(val), left(nullptr), right(nullptr), parent(nullptr), color(BLACK) {}
 };
 
 class BRTree {
@@ -27,40 +29,21 @@ public:
 	}
 
 	Node* insert(Node*& path, int val) {
-		Node* newnode = new Node(val);
-
 		if (!path) {
-			path = newnode;
-			if (!head) head = newnode;
+			path = new Node(val);
 			return path;
 		} 
-		Node* cur = head;
-		if (val < cur->key) {
-			
-			if (!cur->left){
-				cur->left = insert(cur->left, val);
-			}
-			else {
-				cur = cur->left;
-			}
-			cur->parent = path;
-			
+		if (val < path->key) {
+			path->left = insert(path->left, val);
+			path->left->parent = path;
 
 		}
-		else if (val > cur->key) {
-			
-			if (!cur->right){
-				cur->right = insert(cur->right, val);
-			}
-			else {
-				cur = cur->right;
-			}
-			cur->parent = path;
+		else if (val > path->key) {
+			path->right = insert(path->right, val);
+			path->right->parent = path;
 			
 		}
-		else {
-			return path;
-		}
+		return path;
 	}
 
 	void printTree(Node* node) {
@@ -75,11 +58,11 @@ public:
 
 int main() {
 	BRTree tree;
-	Node* h = tree.head;
-
-	h = tree.insert(h, 1);
-	h = tree.insert(h, 2);
-	h = tree.insert(h, 10);
+	
+	tree.insert(tree.head, 1);
+	tree.insert(tree.head, 2);
+	tree.insert(tree.head, 10);
 	tree.printTree(tree.head);
+
 
 }
